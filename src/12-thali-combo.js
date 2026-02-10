@@ -54,16 +54,104 @@
  */
 export function createThaliDescription(thali) {
   // Your code here
+
+  if(typeof thali != "object" || thali === null ||typeof thali.name !== "string" || !Array.isArray(thali.items) ||  typeof thali.price !== "number") return "";
+  const requiredFields = ["name","items","price","isVeg"];
+  let fieldCheck = requiredFields.every(field => field in thali);
+  if(!fieldCheck) return "";
+  return `${(thali.name).toUpperCase()} (${thali.isVeg ? "Veg" : "Non-Veg"}) - Items: ${thali.items.join(', ')} - Rs.${thali.price.toFixed(2)}`;
 }
 
 export function getThaliStats(thalis) {
   // Your code here
+//   2. getThaliStats(thalis)
+//  *      - Array of thali objects ka stats nikalo
+//  *      - .filter() se veg/non-veg count
+//  *      - .reduce() se average price
+//  *      - Math.min/Math.max se cheapest/costliest
+//  *      - .map() se saare names
+//  *      - Return: { totalThalis, vegCount, nonVegCount, avgPrice (2 decimal string),
+//  *                  cheapest (number), costliest (number), names (array) }
+//  *      - Agar thalis array nahi hai ya empty hai, return null
+    if(!Array.isArray(thalis) || thalis.length == 0) return null;
+    let totalThalis = thalis.length;
+    let vegCount, nonVegCount;
+    vegCount = thalis.filter(item => item.isVeg == true);
+    vegCount = vegCount.length;
+    // console.log(vegCount);
+    nonVegCount = thalis.filter(item => item.isVeg == false);
+    nonVegCount = nonVegCount.length;
+    // console.log(nonVegCount);
+    
+    let prices = thalis.map(item => item.price);
+    console.log(prices);
+    
+    let costliest,cheapest;
+    costliest = Math.max(...prices);
+    cheapest = Math.min(...prices);
+    console.log(cheapest);
+    
+    let names = thalis.map(item => item.name);
+    let avgPrice = thalis.reduce((accumulator, currValue) => {
+      return accumulator + currValue.price;
+    },0)/thalis.length;
+    
+    let stringAvg = String(avgPrice.toFixed(2));
+    let stats = {
+      totalThalis,
+      vegCount,
+      nonVegCount,
+      cheapest,
+      costliest,
+      names,
+      avgPrice:stringAvg
+    };
+
+    return stats;
 }
+
+getThaliStats([{ name: "Rajasthani Thali", items: ["dal"], price: 250, isVeg: true }, { name: "Rajasthani Thali", items: ["dal"], price: 150, isVeg: true }])
 
 export function searchThaliMenu(thalis, query) {
   // Your code here
+//   3. searchThaliMenu(thalis, query)
+//  *      - .filter() + .includes() se search karo (case-insensitive)
+//  *      - Thali match karti hai agar name ya koi bhi item query include kare
+//  *      - Agar thalis array nahi hai ya query string nahi hai, return []
+//  *      - Example: searchThaliMenu(thalis, "dal") => thalis with "dal" in name or items
+  if(!Array.isArray(thalis) || typeof query !== "string") return [];
+
+  return thalis.filter( thali => {
+
+    let nameMatch = typeof thali.name === "string" && thali.name.toLowerCase().includes(query.toLowerCase());
+
+    let itemMatch = Array.isArray(thali.items) && thali.items.some(item => item.toLowerCase().includes(query.toLowerCase()));
+
+    return nameMatch || itemMatch; 
+  })
+
 }
 
 export function generateThaliReceipt(customerName, thalis) {
   // Your code here
+  // generateThaliReceipt(customerName, thalis)
+//  *      - Template literals + .map() + .join("\n") + .reduce() se receipt banao
+//  *      - Format:
+//  *        "THALI RECEIPT\n---\nCustomer: {NAME}\n{line items}\n---\nTotal: Rs.{total}\nItems: {count}"
+//  *      - Line item: "- {thali name} x Rs.{price}"
+//  *      - customerName UPPERCASE mein
+//  *      - Agar customerName string nahi hai ya thalis array nahi hai/empty hai, return ""  
+  if(typeof customerName !== "string" || !Array.isArray(thalis) || thalis.length == 0) return "";
+        
+  let lineItem = thalis.map(thali => `- ${thali.name} x Rs.${thali.price}`); //array
+  lineItem = lineItem.join("\n"); //string
+  let total = thalis.reduce((accumulator, currValue) => accumulator + currValue.price,0); //number
+  let itemCount = thalis.length;  //number
+  let receipt = ["THALI RECEIPT", "---", `Customer: ${customerName.toUpperCase()}`,`${lineItem}`,`Total: Rs.${total}`,`Items: ${itemCount}`];
+  return receipt.join("\n");
+
 }
+
+// topics - SQL, Resume(only what you know), they obsreve the approach, OS basics, SQL good command.
+// system design.
+

@@ -59,20 +59,81 @@
  */
 export function getDataType(value) {
   // Your code here
+//   1. getDataType(value)
+//  *      - typeof use karo, LEKIN special cases handle karo:
+//  *        - typeof null === "object" (JS ka famous bug!) → return "null"
+//  *        - typeof [] === "object" (Array bhi object hai) → return "array"
+//  *        - Baaki sab ke liye typeof ki value return karo
+//  *      - Example: getDataType(42) => "number"
+//  *      - Example: getDataType("hello") => "string"
+//  *      - Example: getDataType(null) => "null"
+//  *      - Example: getDataType([1,2]) => "array"
+  if(typeof value === "number") return "number";
+  else if(typeof value === "string") return "string";
+  else if(Array.isArray(value)) return "array";
+  else if(typeof value === "boolean") return "boolean";
+  else if (value === undefined) return "undefined";
+  else if(value === null) return "null";
+  else if(typeof value === "function") return "function";
+  else return "object";
 }
 
 export function isValidParcelWeight(weight) {
   // Your code here
+//   isValidParcelWeight(weight)
+//  *      - Number.isFinite() se check karo ki weight valid finite number hai
+//  *      - Weight positive bhi hona chahiye (> 0)
+//  *      - Infinity, NaN, ya non-number ke liye return false
+//  *      - Example: isValidParcelWeight(2.5) => true
+//  *      - Example: isValidParcelWeight(Infinity) => false
+//  *      - Example: isValidParcelWeight("5") => false (string hai, num
+  if (!Number.isFinite(weight)) return false;
+  else if(weight > 0) return true;
+  else if(weight == 0) return false;
+  else if(weight < 0) return false;
+  else if(isNaN(weight)) return false;
+  else if(typeof weight === "string") return false;
+  else if(typeof weight === undefined || weight === null) return false;
 }
 
 export function isWholeNumber(value) {
   // Your code here
+//   isWholeNumber(value)
+//  *      - Number.isInteger() se check karo ki value whole number hai
+//  *      - Example: isWholeNumber(42) => true
+//  *      - Example: isWholeNumber(42.5) => false
+//  *      - Example: isWholeNumber("42") => false
+    if(Number.isInteger(value)) return true;
+    else return false;
 }
 
 export function isNotANumber(value) {
   // Your code here
+  // isNotANumber(value)
+//  *      - Number.isNaN() se check karo ki value specifically NaN hai
+//  *      - NOTE: Number.isNaN() alag hai global isNaN() se!
+//  *        - Number.isNaN("hello") => false (string hai, NaN nahi)
+//  *        - isNaN("hello") => true (pehle convert karta hai)
+//  *      - Example: isNotANumber(NaN) => true
+//  *      - Example: isNotANumber("hello") => false
+//  *      - Example: isNotANumber(undefined) => false
+  if(typeof value === "string") return false;
+  else if (value === undefined) return false;
+  else if(isNaN(value)) return true;
+  else if(!isNaN(value)) return false;
+  else if(!Number.isNaN(value)) return false;
+  else return null;
 }
 
 export function isTruthy(value) {
   // Your code here
+  // isTruthy(value)
+//  *      - Boolean(value) se check karo ki value truthy hai ya nahi
+//  *      - JS mein Falsy values: false, 0, "", null, undefined, NaN
+//  *      - Sab kuch aur truthy hai (including [], {}, "0", "false")!
+//  *      - Example: isTruthy("hello") => true
+//  *      - Example: isTruthy(0) => false
+//  *      - Example: isTruthy([]) => true (haan, empty array truthy hai!)
+
+  return Boolean(value);
 }

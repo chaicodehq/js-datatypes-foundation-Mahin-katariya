@@ -47,20 +47,51 @@
  */
 export function repeatPattern(pattern, times) {
   // Your code here
+  if(typeof pattern != "string" || typeof times != "number" || times < 0 || !Number.isInteger(times)) return "";
+  return pattern.repeat(times);
 }
 
 export function extractRangoliCenter(design, start, end) {
   // Your code here
+  if(typeof design != "string" || typeof start != "number" || typeof end != "number") return "";
+
+  return design.slice(start,end);
 }
 
 export function splitAndJoinRangoli(colorString, oldSep, newSep) {
   // Your code here
+  if(typeof colorString != "string") return "";
+  let result = colorString.split(oldSep);
+  console.log(result);
+
+  let endResult = result.join(newSep);
+  console.log(endResult);
+
+  return endResult;
 }
+
+// splitAndJoinRangoli("mahin,ashwin,anjali",",","|");
 
 export function replaceRangoliColor(design, oldColor, newColor) {
   // Your code here
+  if(typeof design != "string" || typeof oldColor != "string" || typeof newColor != "string") return "";
+
+  return design.replaceAll(oldColor, newColor);
 }
 
 export function makeRangoliBorder(char, length) {
   // Your code here
+
+  // 5. makeRangoliBorder(char, length)
+  //   * - .repeat() se char ko bahut baar repeat karo
+  //     * - Phir.slice(0, length) se exact length ka border banao
+  //       * - Agar char string nahi hai ya length positive number nahi hai, return ""
+  //         * - Example: makeRangoliBorder("*", 5) => "*****"
+  //           * - Example: makeRangoliBorder("=-", 7) => "=-=-=-="
+
+  if(typeof char != "string" || length < 0) return "";
+  let repeatedChar = char.repeat(length);
+  let rangoliBorder = repeatedChar.slice(0,length);
+  return rangoliBorder;
+
 }
